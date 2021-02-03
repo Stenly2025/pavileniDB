@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Хранилище pavileniDBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Pavilieni">
+    <Key>
+      <PropertyRef Name="NumberPavilien" />
+    </Key>
+    <Property Name="Name" Type="varchar" MaxLength="50" />
+    <Property Name="NumberPavilien" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Floor" Type="int" />
+    <Property Name="Status" Type="varchar" MaxLength="50" />
+    <Property Name="Area" Type="float" />
+    <Property Name="Price" Type="float" />
+    <Property Name="Ratio" Type="float" />
+  </EntityType>
+  <EntityType Name="Rent">
+    <Key>
+      <PropertyRef Name="IdRent" />
+    </Key>
+    <Property Name="IdRent" Type="int" Nullable="false" />
+    <Property Name="IdTancent" Type="int" />
+    <Property Name="NameShopMall" Type="varchar" MaxLength="50" />
+    <Property Name="IdEmploye" Type="int" />
+    <Property Name="NumberPav" Type="varchar" MaxLength="50" />
+    <Property Name="Status" Type="varchar" MaxLength="50" />
+    <Property Name="OpenRent" Type="date" />
+    <Property Name="CloseRent" Type="date" />
+  </EntityType>
+  <EntityType Name="ShoppingMall">
+    <Key>
+      <PropertyRef Name="Name" />
+    </Key>
+    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Status" Type="varchar" MaxLength="50" />
+    <Property Name="CountPav" Type="int" />
+    <Property Name="City" Type="varchar" MaxLength="50" />
+    <Property Name="Price" Type="float" />
+    <Property Name="Ratio" Type="float" />
+    <Property Name="Floor" Type="int" />
+    <Property Name="Picture" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="Tenants">
+    <Key>
+      <PropertyRef Name="IdTen" />
+    </Key>
+    <Property Name="IdTen" Type="int" Nullable="false" />
+    <Property Name="IdRent" Type="int" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" />
+    <Property Name="PhoneNumber" Type="varchar" MaxLength="50" />
+    <Property Name="Address" Type="varchar" MaxLength="150" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Login" Type="varchar" MaxLength="50" />
+    <Property Name="Password" Type="varchar" MaxLength="50" />
+    <Property Name="FirstName" Type="varchar" MaxLength="50" />
+    <Property Name="LastName" Type="varchar" MaxLength="50" />
+    <Property Name="MidName" Type="varchar" MaxLength="50" />
+    <Property Name="Role" Type="varchar" MaxLength="50" />
+    <Property Name="NumberPhone" Type="varchar" MaxLength="50" />
+    <Property Name="Sex" Type="varchar" MaxLength="50" />
+    <Property Name="Picture" Type="varbinary(max)" />
+  </EntityType>
+  <Association Name="FK_Rent_Pavilieni">
+    <End Role="Pavilieni" Type="Self.Pavilieni" Multiplicity="0..1" />
+    <End Role="Rent" Type="Self.Rent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Pavilieni">
+        <PropertyRef Name="NumberPavilien" />
+      </Principal>
+      <Dependent Role="Rent">
+        <PropertyRef Name="NumberPav" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Rent_ShoppingMall">
+    <End Role="ShoppingMall" Type="Self.ShoppingMall" Multiplicity="0..1" />
+    <End Role="Rent" Type="Self.Rent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ShoppingMall">
+        <PropertyRef Name="Name" />
+      </Principal>
+      <Dependent Role="Rent">
+        <PropertyRef Name="NameShopMall" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Rent_Tenants">
+    <End Role="Tenants" Type="Self.Tenants" Multiplicity="0..1" />
+    <End Role="Rent" Type="Self.Rent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Tenants">
+        <PropertyRef Name="IdTen" />
+      </Principal>
+      <Dependent Role="Rent">
+        <PropertyRef Name="IdTancent" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Rent_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+    <End Role="Rent" Type="Self.Rent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Rent">
+        <PropertyRef Name="IdEmploye" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Tenants_Rent">
+    <End Role="Rent" Type="Self.Rent" Multiplicity="1" />
+    <End Role="Tenants" Type="Self.Tenants" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Rent">
+        <PropertyRef Name="IdRent" />
+      </Principal>
+      <Dependent Role="Tenants">
+        <PropertyRef Name="IdRent" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+  <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <EntityContainer Name="Хранилище pavileniDBModelContainer">
+    <EntitySet Name="Pavilieni" EntityType="Self.Pavilieni" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Rent" EntityType="Self.Rent" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ShoppingMall" EntityType="Self.ShoppingMall" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Tenants" EntityType="Self.Tenants" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Rent_Pavilieni" Association="Self.FK_Rent_Pavilieni">
+      <End Role="Pavilieni" EntitySet="Pavilieni" />
+      <End Role="Rent" EntitySet="Rent" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Rent_ShoppingMall" Association="Self.FK_Rent_ShoppingMall">
+      <End Role="ShoppingMall" EntitySet="ShoppingMall" />
+      <End Role="Rent" EntitySet="Rent" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Rent_Tenants" Association="Self.FK_Rent_Tenants">
+      <End Role="Tenants" EntitySet="Tenants" />
+      <End Role="Rent" EntitySet="Rent" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Rent_Users" Association="Self.FK_Rent_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Rent" EntitySet="Rent" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Tenants_Rent" Association="Self.FK_Tenants_Rent">
+      <End Role="Rent" EntitySet="Rent" />
+      <End Role="Tenants" EntitySet="Tenants" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
